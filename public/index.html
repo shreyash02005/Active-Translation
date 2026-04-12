@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>BhashaLive - Real-Time Translation</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Work+Sans:wght@300;400;500;600&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#002204",
+                    "on-secondary-fixed": "#341100",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "outline": "#767683",
+                    "secondary": "#9e4200",
+                    "tertiary-fixed-dim": "#88d982",
+                    "outline-variant": "#c6c5d4",
+                    "on-primary-fixed-variant": "#343d96",
+                    "secondary-fixed-dim": "#ffb691",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#f9f9f9",
+                    "surface-container": "#eeeeee",
+                    "on-primary-fixed": "#000767",
+                    "primary-fixed-dim": "#bdc2ff",
+                    "on-tertiary-container": "#5aa958",
+                    "on-surface": "#1a1c1c",
+                    "surface-tint": "#4c56af",
+                    "surface-dim": "#dadada",
+                    "on-background": "#1a1c1c",
+                    "primary-fixed": "#e0e0ff",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#1a237e",
+                    "on-surface-variant": "#454652",
+                    "surface-variant": "#e2e2e2",
+                    "tertiary-fixed": "#a3f69c",
+                    "on-tertiary-fixed-variant": "#005312",
+                    "secondary-fixed": "#ffdbcb",
+                    "on-secondary-container": "#562100",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#8690ee",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-container-highest": "#e2e2e2",
+                    "primary": "#000666",
+                    "tertiary": "#002103",
+                    "inverse-on-surface": "#f0f1f1",
+                    "tertiary-container": "#003909",
+                    "on-secondary-fixed-variant": "#793100",
+                    "secondary-container": "#fb6d00",
+                    "on-secondary": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "inverse-primary": "#bdc2ff",
+                    "background": "#f9f9f9",
+                    "surface-container-low": "#f3f3f3",
+                    "surface": "#f9f9f9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Work Sans"],
+                    "label": ["Work Sans"]
+            }
+          },
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-background font-body text-on-surface min-h-screen flex flex-col">
+    <!-- TopNavBar -->
+    <nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#1A237E] dark:bg-slate-950 shadow-lg border-b-[3px] border-[#FF6F00]">
+        <div class="flex items-center gap-8">
+            <span class="text-2xl font-extrabold text-white tracking-wider font-['Plus_Jakarta_Sans']">BhashaLive</span>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="darkModeToggle" class="p-2 text-white/70 hover:bg-white/10 rounded-full transition-colors active:scale-95" title="Toggle Dark Mode">
+                <span id="darkModeIcon" class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <button id="clearBtn" class="p-2 text-white/70 hover:bg-white/10 rounded-full transition-colors active:scale-95" title="Clear All">
+                <span class="material-symbols-outlined">delete_sweep</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-grow pt-24 pb-12 px-6 max-w-7xl mx-auto w-full flex flex-col gap-8">
+        <!-- Header Section -->
+        <header class="flex justify-between items-end">
+            <div class="space-y-1">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-secondary uppercase font-label">Real-Time Processing</p>
+                <h1 class="text-4xl font-extrabold font-headline tracking-tight text-primary leading-tight">Active Translation</h1>
+            </div>
+            <div class="flex gap-2 bg-surface-container-low p-1 rounded-full">
+                <button id="modeText" class="px-6 py-2 rounded-full bg-secondary-container text-on-secondary-container font-semibold text-sm shadow-sm transition-all">Text</button>
+                <button id="modeVoice" class="px-6 py-2 rounded-full bg-surface-container-lowest text-on-surface font-semibold text-sm shadow-sm transition-all">Voice</button>
+            </div>
+        </header>
+
+        <!-- Translation Hub (Asymmetric Bento Grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-stretch">
+            <!-- Source Panel -->
+            <div class="md:col-span-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between px-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">From:</span>
+                        <select id="fromLang" class="bg-secondary-container text-on-secondary-container text-xs font-bold px-4 py-1.5 rounded-full border-none focus:ring-0 cursor-pointer shadow-sm appearance-none">
+                            <option value="en-IN" selected>ENGLISH</option>
+                            <option value="hi-IN">HINDI</option>
+                            <option value="ta-IN">TAMIL</option>
+                            <option value="mr-IN">MARATHI</option>
+                            <option value="te-IN">TELUGU</option>
+                            <option value="kn-IN">KANNADA</option>
+                        </select>
+                    </div>
+                    <span class="material-symbols-outlined text-outline-variant text-lg cursor-pointer hover:text-primary transition-colors">volume_up</span>
+                </div>
+                <div class="bg-surface-container-lowest rounded-xl p-8 min-h-[300px] shadow-[0_12px_32px_rgba(26,35,126,0.05)] border-b-2 border-secondary-container relative flex flex-col">
+                    <textarea id="inputText" class="w-full flex-grow bg-transparent border-none focus:ring-0 text-2xl font-headline font-semibold text-primary placeholder:text-outline-variant resize-none leading-relaxed" placeholder="Type or speak..."></textarea>
+                    <div id="charCount" class="absolute bottom-2 left-8 text-[10px] font-bold text-outline-variant">0 / 5000</div>
+                    <div id="micStatusContainer" class="absolute bottom-6 right-6 flex items-center gap-2 text-error font-semibold text-sm opacity-0 transition-opacity duration-300">
+                        <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+                        <span id="micStatus" class="tracking-wide">Listening...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interaction Core (Central) -->
+            <div class="md:col-span-2 flex flex-col items-center justify-center gap-12 py-8 relative">
+                <!-- Swapper -->
+                <button id="swapBtn" class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-surface-container-highest transition-all active:rotate-180 duration-500 shadow-sm">
+                    <span class="material-symbols-outlined">swap_horiz</span>
+                </button>
+
+                <!-- Audio Waveform Visualizer -->
+                <div id="waveform" class="flex items-end justify-center gap-1.5 h-16 w-full opacity-0 transition-opacity duration-300">
+                    <div class="w-1.5 bg-primary rounded-full transition-all duration-300 bar" style="height: 40%"></div>
+                    <div class="w-1.5 bg-secondary-container rounded-full transition-all duration-300 bar" style="height: 80%"></div>
+                    <div class="w-1.5 bg-primary rounded-full transition-all duration-300 bar" style="height: 100%"></div>
+                    <div class="w-1.5 bg-secondary-container rounded-full transition-all duration-300 bar" style="height: 60%"></div>
+                    <div class="w-1.5 bg-primary rounded-full transition-all duration-300 bar" style="height: 30%"></div>
+                </div>
+
+                <!-- Active Recording Button -->
+                <div class="relative flex items-center justify-center">
+                    <!-- Concentric Rings -->
+                    <div id="micPulse" class="absolute w-24 h-24 rounded-full border-2 border-error/20 listening-pulse hidden"></div>
+                    <button id="micBtn" class="z-10 w-20 h-20 rounded-full bg-[#c62828] text-white flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all group">
+                        <span id="micIcon" class="material-symbols-outlined text-3xl">mic</span>
+                        <div id="stopIcon" class="w-6 h-6 bg-white rounded-sm group-hover:scale-90 transition-transform hidden"></div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Target Panel -->
+            <div class="md:col-span-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between px-2">
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold tracking-widest text-on-surface-variant uppercase">To:</span>
+                        <select id="toLang" class="bg-surface-container-high text-on-surface-variant text-xs font-bold px-4 py-1.5 rounded-full border-none focus:ring-0 cursor-pointer shadow-sm appearance-none">
+                            <option value="en-IN">ENGLISH</option>
+                            <option value="hi-IN" selected>HINDI</option>
+                            <option value="ta-IN">TAMIL</option>
+                            <option value="mr-IN">MARATHI</option>
+                            <option value="te-IN">TELUGU</option>
+                            <option value="kn-IN">KANNADA</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-4">
+                        <div id="loading" class="spinner-border spinner-border-sm text-primary hidden" role="status">
+                            <span class="material-symbols-outlined animate-spin">sync</span>
+                        </div>
+                        <span id="copyBtn" class="material-symbols-outlined text-outline-variant text-lg cursor-pointer hover:text-primary transition-colors">content_copy</span>
+                        <span id="speakBtn" class="material-symbols-outlined text-outline-variant text-lg cursor-pointer hover:text-primary transition-colors">volume_up</span>
+                    </div>
+                </div>
+                <div id="outputTextContainer" class="bg-surface-container-low rounded-xl p-8 min-h-[300px] shadow-[0_12px_32px_rgba(26,35,126,0.02)] border-b-2 border-transparent relative overflow-y-auto">
+                    <div id="placeholder" class="h-full flex flex-col items-center justify-center text-center opacity-40">
+                        <span class="material-symbols-outlined text-6xl mb-4">auto_awesome</span>
+                        <p class="font-headline font-medium text-lg mb-4">Translation will appear<br/>as you speak...</p>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <button class="suggestion-chip px-3 py-1 rounded-full border border-primary text-[10px] font-bold hover:bg-primary hover:text-white transition-colors">How are you?</button>
+                            <button class="suggestion-chip px-3 py-1 rounded-full border border-primary text-[10px] font-bold hover:bg-primary hover:text-white transition-colors">Where is the nearest station?</button>
+                            <button class="suggestion-chip px-3 py-1 rounded-full border border-primary text-[10px] font-bold hover:bg-primary hover:text-white transition-colors">I need help</button>
+                        </div>
+                    </div>
+                    <p id="outputText" class="text-2xl font-headline font-semibold text-primary leading-relaxed hidden"></p>
+                    <span id="cursor" class="inline-block w-0.5 h-8 bg-primary ml-1 animate-pulse hidden"></span>
+                </div>
+                <div id="kannadaWarning" class="text-xs text-error font-semibold px-2 hidden">
+                    Kannada audio may not be available on this browser. Try Chrome.
+                </div>
+            </div>
+        </div>
+
+        <!-- Secondary Information / Meta Section -->
+        <section class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 transition-colors hover:bg-surface-container-high">
+                <div class="w-10 h-10 rounded-lg bg-primary-fixed-dim flex items-center justify-center text-primary shrink-0">
+                    <span class="material-symbols-outlined">history_edu</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-primary">Context Aware</h3>
+                    <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Analyzing conversational tone for a more natural Indian dialect translation.</p>
+                </div>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 transition-colors hover:bg-surface-container-high">
+                <div class="w-10 h-10 rounded-lg bg-tertiary-fixed-dim flex items-center justify-center text-on-tertiary-fixed-variant shrink-0">
+                    <span class="material-symbols-outlined">network_check</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-primary">Latency: 120ms</h3>
+                    <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Stable high-speed connection. Processing voice streams in real-time.</p>
+                </div>
+            </div>
+            <div class="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 transition-colors hover:bg-surface-container-high">
+                <div class="w-10 h-10 rounded-lg bg-secondary-fixed-dim flex items-center justify-center text-on-secondary-fixed-variant shrink-0">
+                    <span class="material-symbols-outlined">verified_user</span>
+                </div>
+                <div>
+                    <h3 class="font-bold text-sm text-primary">Privacy Shield</h3>
+                    <p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Your audio data is processed locally and never stored on our servers.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1A237E] dark:bg-slate-950 w-full flex justify-center items-center text-center px-4 py-8 mt-auto">
+        <p class="font-['Work_Sans'] text-sm tracking-wide uppercase text-white/70">
+            Built with Gemini AI • BhashaLive © 2025
+        </p>
+    </footer>
+
+    <!-- Toasts -->
+    <div class="fixed top-20 right-6 z-[100] flex flex-col gap-2">
+        <div id="errorToast" class="hidden bg-error text-on-error px-6 py-3 rounded-xl shadow-xl flex items-center gap-3 animate-bounce">
+            <span class="material-symbols-outlined">error</span>
+            <span id="toastMessage" class="font-bold text-sm"></span>
+        </div>
+    </div>
+
+    <!-- Decorative Corner Element -->
+    <div class="fixed bottom-0 right-0 w-64 h-64 opacity-10 pointer-events-none overflow-hidden translate-x-12 translate-y-12">
+        <div class="absolute inset-0 bg-secondary-container rounded-full blur-[80px]"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

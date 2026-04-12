@@ -1,0 +1,5 @@
+{
+  "name": "Real-Time Language Translator",
+  "description": "A production-ready language translator with live speech transcription, real-time text translation, and audio playback, powered by Gemini AI.",
+  "requestFramePermissions": ["microphone"]
+}

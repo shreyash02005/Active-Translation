@@ -1,0 +1,87 @@
+/* Material Symbols Configuration */
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Theme Transition */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Animations */
+.listening-pulse {
+    animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+}
+
+@keyframes pulse-ring {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    80%, 100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* Waveform Bars */
+#waveform .bar {
+    transition: height 0.1s ease-out, background-color 0.2s ease;
+}
+
+/* Action Buttons */
+#copyBtn, #speakBtn {
+    transition: all 0.2s ease;
+    padding: 4px;
+    border-radius: 50%;
+}
+
+#copyBtn:hover, #speakBtn:hover {
+    background-color: rgba(26, 35, 126, 0.05);
+    transform: scale(1.1);
+}
+
+#copyBtn.text-success {
+    color: #2e7d32 !important;
+    font-variation-settings: 'FILL' 1;
+}
+
+#speakBtn.speaking {
+    color: #fb6d00 !important;
+    font-variation-settings: 'FILL' 1;
+    animation: pulse-small 1.5s infinite;
+}
+
+@keyframes pulse-small {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Custom Scrollbar */
+#outputTextContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+#outputTextContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#outputTextContainer::-webkit-scrollbar-thumb {
+    background: #e2e2e2;
+    border-radius: 10px;
+}
+
+#outputTextContainer::-webkit-scrollbar-thumb:hover {
+    background: #c6c5d4;
+}
+
+/* Mode Toggle Active State */
+.mode-active {
+    background-color: #fb6d00 !important;
+    color: #ffffff !important;
+}
+
+/* Toast Animation */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.toast-visible {
+    display: flex !important;
+    animation: slideIn 0.3s ease-out forwards;
+}
