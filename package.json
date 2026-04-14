@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx server.js",
     "start": "node server.js",
-    "build": "echo 'No build step needed'",
+    "build": "vite build",
     "lint": "tsc --noEmit"
   },
   "dependencies": {

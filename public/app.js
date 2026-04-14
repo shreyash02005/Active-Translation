@@ -47,7 +47,13 @@ let stream = null;
 
 // Gemini AI Setup
 const apiKey = process.env.GEMINI_API_KEY;
-const ai = new GoogleGenAI({ apiKey });
+if (!apiKey) {
+    console.error('GEMINI_API_KEY is not defined. Please set it in your environment variables.');
+    window.addEventListener('DOMContentLoaded', () => {
+        showToast('API Key missing. Please set GEMINI_API_KEY in Vercel settings.', 'danger');
+    });
+}
+const ai = new GoogleGenAI({ apiKey: apiKey || 'dummy-key' });
 
 // Initialize Speech Recognition
 function initSpeechRecognition() {
